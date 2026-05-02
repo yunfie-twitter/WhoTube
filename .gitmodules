@@ -7,6 +7,3 @@
 [submodule "bgutil-ytdlp-pot-provider"]
 	path = bgutil-ytdlp-pot-provider
 	url = https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git
-[submodule "WhoTube-yt-dlp"]
-	path = WhoTube-yt-dlp
-	url = https://github.com/yunfie-twitter/WhoTube-yt-dlp.git

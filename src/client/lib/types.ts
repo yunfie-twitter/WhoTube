@@ -10,6 +10,9 @@ export interface VideoItem {
   publishedText?: string;
   description?: string;
   isShort?: boolean;
+  isLive?: boolean;
+  isUpcoming?: boolean;
+  badges?: string[];
   type?: 'video' | 'channel' | 'playlist' | 'movie';
 }
 

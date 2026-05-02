@@ -110,7 +110,7 @@ export function VideoGrid({ items, hideChannel = false, onVideoClick }: Props) {
                 </p>
                 {video.badges && video.badges.length > 0 && (
                   <div className="mt-1 flex flex-wrap gap-1">
-                    {video.badges.map((badge) => (
+                    {video.badges.map((badge: string) => (
                       <Badge key={badge} variant="secondary" className="h-4 rounded-[2px] bg-zinc-200 px-1 text-[10px] font-bold text-zinc-500 hover:bg-zinc-300 dark:bg-[#272727] dark:text-zinc-400 dark:hover:bg-[#3f3f3f] dark:hover:text-white">
                         {badge}
                       </Badge>
