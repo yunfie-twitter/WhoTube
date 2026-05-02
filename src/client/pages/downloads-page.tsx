@@ -5,6 +5,7 @@ import { proxyImageUrl } from '../lib/images';
 import { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
+import React from 'react';
 
 export function DownloadsPage() {
   const [videos, setVideos] = useState<OfflineVideoMetadata[]>([]);
@@ -87,18 +88,18 @@ export function DownloadsPage() {
             </div>
             <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {videos.map((video, i) => (
-                <div 
-                  key={video.id} 
+                <div
+                  key={video.id}
                   className="group relative flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500"
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
-                  <Link 
-                    to={`/watch/${video.id}?offline=1`} 
+                  <Link
+                    to={`/watch/${video.id}?offline=1`}
                     className="relative aspect-video overflow-hidden rounded-2xl bg-zinc-200 shadow-sm transition-all dark:bg-zinc-800 ring-1 ring-black/5 dark:ring-white/5"
                   >
-                    <img 
-                      src={proxyImageUrl(video.thumbnail)} 
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:blur-[2px]" 
+                    <img
+                      src={proxyImageUrl(video.thumbnail)}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:blur-[2px]"
                       alt={video.title}
                       loading="lazy"
                     />
@@ -131,7 +132,7 @@ export function DownloadsPage() {
                         </p>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={(e) => handleDelete(video.id, e)}
                       className="mt-1 h-9 w-9 shrink-0 rounded-full flex items-center justify-center text-zinc-400 transition-all hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30"
                       title="削除"

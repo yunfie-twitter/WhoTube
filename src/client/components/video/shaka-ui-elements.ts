@@ -1,10 +1,10 @@
 import shaka from 'shaka-player/dist/shaka-player.ui';
 
 // Shaka UI カスタム要素の登録
-export class TheaterModeButton extends shaka.ui.Element {
+export class TheaterModeButton extends (shaka as any).ui.Element {
   private button_: HTMLButtonElement;
 
-  constructor(parent: HTMLElement, controls: shaka.ui.Controls) {
+  constructor(parent: HTMLElement, controls: any) {
     super(parent, controls);
 
     this.button_ = document.createElement('button');
@@ -14,9 +14,9 @@ export class TheaterModeButton extends shaka.ui.Element {
     this.button_.title = 'シアターモード';
     this.button_.style.color = 'white';
     
-    this.parent.appendChild(this.button_);
+    (this as any).parent.appendChild(this.button_);
 
-    this.eventManager.listen(this.button_, 'click', () => {
+    (this as any).eventManager.listen(this.button_, 'click', () => {
       window.dispatchEvent(new CustomEvent('whotube:toggle-theater'));
     });
   }
@@ -27,9 +27,10 @@ let isRegistered = false;
 export function registerShakaCustomElements() {
   if (isRegistered) return;
   
-  if (typeof shaka !== 'undefined' && shaka.ui && shaka.ui.Controls) {
-    shaka.ui.Controls.registerElement('theater_mode', {
-      create(parent: HTMLElement, controls: shaka.ui.Controls) {
+  const shakaAny = shaka as any;
+  if (typeof shaka !== 'undefined' && shakaAny.ui && shakaAny.ui.Controls) {
+    shakaAny.ui.Controls.registerElement('theater_mode', {
+      create(parent: HTMLElement, controls: any) {
         return new TheaterModeButton(parent, controls);
       }
     });

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { 
-  Shield, 
-  Activity, 
-  Bell, 
-  Trash2, 
-  Send, 
-  Clock, 
-  Cpu, 
+import {
+  Shield,
+  Activity,
+  Bell,
+  Trash2,
+  Send,
+  Clock,
+  Cpu,
   HardDrive,
   RefreshCcw,
   AlertCircle,
@@ -17,6 +17,7 @@ import {
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { cn } from '../lib/utils';
+import React from 'react';
 
 interface SystemMetrics {
   uptime: number;
@@ -53,7 +54,7 @@ export function AdminWebUIPage() {
     setError(null);
     try {
       const headers = { 'Authorization': `Bearer ${activeToken}` };
-      
+
       const [metricsRes, notificationsRes] = await Promise.all([
         fetch('/metrics').then(r => r.json()),
         fetch('/api/notifications').then(r => r.json())
@@ -144,9 +145,9 @@ export function AdminWebUIPage() {
           <form onSubmit={handleLogin} className="space-y-6 p-8">
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Admin Secret Token</label>
-              <Input 
-                type="password" 
-                placeholder="••••••••••••" 
+              <Input
+                type="password"
+                placeholder="••••••••••••"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
                 className="h-12 bg-zinc-50 dark:bg-zinc-900/50"
@@ -238,7 +239,7 @@ export function AdminWebUIPage() {
           <form onSubmit={handleSendNotification} className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-[#1a1a1a]">
             <h3 className="font-bold">新しい通知を作成</h3>
             <div className="space-y-2">
-              <textarea 
+              <textarea
                 placeholder="全ユーザーに表示されるメッセージを入力してください..."
                 value={msg}
                 onChange={(e) => setMsg(e.target.value)}
@@ -253,11 +254,11 @@ export function AdminWebUIPage() {
                   onClick={() => setType(t)}
                   className={cn(
                     "rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-all",
-                    type === t 
+                    type === t
                       ? (t === 'info' ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30" :
-                         t === 'warning' ? "bg-amber-600 text-white shadow-lg shadow-amber-500/30" :
-                         t === 'error' ? "bg-red-600 text-white shadow-lg shadow-red-500/30" :
-                         "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30")
+                        t === 'warning' ? "bg-amber-600 text-white shadow-lg shadow-amber-500/30" :
+                          t === 'error' ? "bg-red-600 text-white shadow-lg shadow-red-500/30" :
+                            "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30")
                       : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400"
                   )}
                 >
@@ -287,22 +288,22 @@ export function AdminWebUIPage() {
             ) : (
               <div className="grid gap-3">
                 {notifications.map((n) => (
-                  <div 
-                    key={n.id} 
+                  <div
+                    key={n.id}
                     className={cn(
                       "group flex items-start gap-4 rounded-2xl border border-zinc-200 bg-white p-4 transition-all hover:shadow-md dark:border-zinc-800 dark:bg-[#1a1a1a]",
                       n.type === 'warning' ? "border-amber-100 bg-amber-50/30 dark:border-amber-900/20" :
-                      n.type === 'error' ? "border-red-100 bg-red-50/30 dark:border-red-900/20" :
-                      n.type === 'success' ? "border-emerald-100 bg-emerald-50/30 dark:border-emerald-900/20" :
-                      ""
+                        n.type === 'error' ? "border-red-100 bg-red-50/30 dark:border-red-900/20" :
+                          n.type === 'success' ? "border-emerald-100 bg-emerald-50/30 dark:border-emerald-900/20" :
+                            ""
                     )}
                   >
                     <div className={cn(
                       "mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
                       n.type === 'warning' ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400" :
-                      n.type === 'error' ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400" :
-                      n.type === 'success' ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400" :
-                      "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+                        n.type === 'error' ? "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400" :
+                          n.type === 'success' ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400" :
+                            "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
                     )}>
                       <Bell className="h-4 w-4" />
                     </div>
@@ -310,7 +311,7 @@ export function AdminWebUIPage() {
                       <p className="text-sm font-medium leading-relaxed">{n.message}</p>
                       <p className="mt-1 text-xs text-zinc-500">{new Date(n.createdAt).toLocaleString('ja-JP')}</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleDeleteNotification(n.id)}
                       className="opacity-0 transition-opacity group-hover:opacity-100 p-2 text-zinc-400 hover:text-red-500"
                     >
@@ -331,9 +332,9 @@ export function AdminWebUIPage() {
           </div>
 
           <div className="grid gap-4">
-            <a 
-              href="/docs" 
-              target="_blank" 
+            <a
+              href="/docs"
+              target="_blank"
               className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white p-5 transition-all hover:bg-zinc-50 dark:border-zinc-800 dark:bg-[#1a1a1a] dark:hover:bg-zinc-900/50"
             >
               <div className="flex items-center gap-4">
@@ -367,7 +368,7 @@ export function AdminWebUIPage() {
             <div className="rounded-2xl bg-zinc-900 p-8 text-white shadow-2xl dark:bg-white dark:text-black">
               <h3 className="text-xl font-bold">WhoTube v4.0</h3>
               <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
-                WhoTube Instance Management Console.<br/>
+                WhoTube Instance Management Console.<br />
                 インスタンスの健康状態を監視し、全ユーザーに向けたアナウンスメントを送信できます。
               </p>
               <Button className="mt-6 w-full bg-white text-black hover:bg-zinc-200 dark:bg-black dark:text-white dark:hover:bg-zinc-800">

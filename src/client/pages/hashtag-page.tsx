@@ -5,6 +5,7 @@ import { getHashtag } from '../lib/api';
 import { VideoGrid } from '../components/video/video-grid';
 import { Loader2 } from 'lucide-react';
 import { ErrorPage } from './error-page';
+import React from 'react';
 
 export function HashtagPage() {
   const { tag } = useParams<{ tag: string }>();
@@ -29,7 +30,7 @@ export function HashtagPage() {
 
   useEffect(() => {
     if (!hasNextPage || isFetchingNextPage) return;
-    
+
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         fetchNextPage();
