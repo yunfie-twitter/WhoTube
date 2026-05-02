@@ -1,0 +1,12 @@
+[submodule "bgutil-ytdlp-pot-provider展"]
+	path = bgutil-ytdlp-pot-provider展
+	url = https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git
+[submodule "invidious-companion"]
+	path = invidious-companion
+	url = https://github.com/iv-org/invidious-companion.git
+[submodule "bgutil-ytdlp-pot-provider"]
+	path = bgutil-ytdlp-pot-provider
+	url = https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git
+[submodule "WhoTube-yt-dlp"]
+	path = WhoTube-yt-dlp
+	url = https://github.com/yunfie-twitter/WhoTube-yt-dlp.git

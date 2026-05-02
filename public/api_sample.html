@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>WhoTube Iframe API Sample</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #0f0f0f; color: white; }
+        .controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        button { padding: 10px 20px; cursor: pointer; background: #333; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #444; }
+        #status { margin-top: 10px; color: #aaa; }
+    </style>
+</head>
+<body>
+    <h1>WhoTube Iframe API Sample</h1>
+    
+    <!-- この要素がプレーヤーに置換されます -->
+    <div id="player"></div>
+
+    <div class="controls">
+        <button onclick="player.playVideo()">Play</button>
+        <button onclick="player.pauseVideo()">Pause</button>
+        <button onclick="player.stopVideo()">Stop</button>
+        <button onclick="player.seekTo(30)">Seek to 30s</button>
+        <button onclick="player.setVolume(50)">Set Volume 50%</button>
+        <button onclick="player.mute()">Mute</button>
+        <button onclick="player.unMute()">Unmute</button>
+    </div>
+
+    <div id="status">Player State: UNSTARTED</div>
+
+    <!-- WhoTube Iframe API の読み込み -->
+    <script src="/js/iframe_api.js"></script>
+
+    <script>
+        var player;
+        
+        // APIの準備ができたら呼び出されます
+        function onWhoTubeIframeAPIReady() {
+            console.log('WhoTube API Ready');
+            player = new WhoTube.Player('player', {
+                height: '360',
+                width: '640',
+                videoId: 'dQw4w9WgXcQ', // 任意の動画ID
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('Player Ready');
+            document.getElementById('status').innerText = 'Player State: READY';
+        }
+
+        function onPlayerStateChange(event) {
+            var stateNames = {
+                '-1': 'UNSTARTED',
+                '0': 'ENDED',
+                '1': 'PLAYING',
+                '2': 'PAUSED',
+                '3': 'BUFFERING',
+                '5': 'CUED'
+            };
+            var state = event.data;
+            document.getElementById('status').innerText = 'Player State: ' + (stateNames[state] || state);
+            console.log('State Changed:', stateNames[state]);
+        }
+    </script>
+</body>
+</html>

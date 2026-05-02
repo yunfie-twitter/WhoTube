@@ -1,0 +1,10 @@
+node_modules
+dist
+npm-debug.log*
+.git
+.github
+.tmp-edge-profile
+bgutil-ytdlp-pot-provider
+data
+scratch
+tmp-*.log

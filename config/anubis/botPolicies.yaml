@@ -1,0 +1,60 @@
+# Anubis Bot Policies Configuration
+
+# Bot Rules
+bots:
+  # robots.txt へのアクセスを常に許可
+  - name: allow-robots-txt
+    path_regex: "^/robots.txt$"
+    action: ALLOW
+
+  # 特定の悪質なボットを直接拒否
+  - name: block-common-scrapers
+    user_agent_regex: "(?i)(AhrefsBot|DotBot|MJ12bot|SemrushBot|Baiduspider)"
+    action: DENY
+
+  # 疑わしいツールに重みを付与
+  - name: weigh-suspicious-tools
+    user_agent_regex: "(?i)(curl|wget|python-requests|libwww-perl|go-http-client)"
+    action: WEIGH
+    weight:
+      adjust: 25
+
+  # 一般的なブラウザ（Mozilla系）に軽い重みを付与
+  - name: weigh-generic-browsers
+    user_agent_regex: "Mozilla"
+    action: WEIGH
+    weight:
+      adjust: 3
+
+# Open Graph Settings
+openGraph:
+  enabled: true
+  considerHost: true
+  ttl: 24h
+  override:
+    "og:title": "WhoTube"
+    "og:description": "A privacy-focused YouTube client."
+    "description": "A privacy-focused YouTube client."
+
+# Thresholds based on request weight
+thresholds:
+  # 低スコアは通過
+  - name: passthrough-low-weight
+    expression: "weight < 10"
+    action: ALLOW
+
+  # 中スコアはメタリフレッシュによる軽いチャレンジ
+  - name: light-challenge
+    expression: "weight >= 10 && weight < 20"
+    action: CHALLENGE
+    challenge:
+      algorithm: metarefresh
+      difficulty: 1
+
+  # 高スコアはより困難なチャレンジ
+  - name: hard-challenge
+    expression: "weight >= 20"
+    action: CHALLENGE
+    challenge:
+      algorithm: metarefresh
+      difficulty: 5

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>WhoTube Cast Receiver</title>
+    <script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@5.1.1/dist/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shaka-player@5.1.1/dist/controls.css">
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        #player-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+        }
+
+        #debug-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            color: #00ff00;
+            max-width: min(70vw, 900px);
+            transition: opacity 300ms ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="debug-info">WhoTube Receiver Ready...</div>
+    <div id="player-container" shaka-controls="false">
+        <video id="video" autoplay playsinline></video>
+    </div>
+
+    <script>
+        const debugEl = document.getElementById('debug-info');
+        let debugTimer = 0;
+        const debug = (msg) => {
+            console.log(msg);
+            debugEl.innerText = msg;
+            debugEl.style.opacity = '1';
+            window.clearTimeout(debugTimer);
+            debugTimer = window.setTimeout(() => {
+                debugEl.style.opacity = '0';
+            }, 8000);
+        };
+
+        const absoluteUrl = (url) => {
+            try {
+                return new URL(url, window.location.origin).href;
+            } catch {
+                return url;
+            }
+        };
+
+        const applyMetadata = (receiver, data) => {
+            if (!data || typeof data !== 'object') return;
+            receiver.clearContentMetadata();
+            if (data.title) receiver.setContentTitle(String(data.title));
+            if (data.artist) receiver.setContentArtist(String(data.artist));
+            if (data.image) receiver.setContentImage(absoluteUrl(String(data.image)));
+        };
+
+        async function initReceiver() {
+            const video = document.getElementById('video');
+            shaka.polyfill.installAll();
+
+            if (!shaka.Player.isBrowserSupported()) {
+                debug('Browser not supported!');
+                return;
+            }
+
+            const player = new shaka.Player(video);
+            const ui = new shaka.ui.Overlay(player, document.getElementById('player-container'), video);
+            ui.configure({
+                addSeekBar: false,
+                controlPanelElements: []
+            });
+
+            player.configure({
+                manifest: {
+                    retryParameters: { maxAttempts: 4, baseDelay: 500, backoffFactor: 2, fuzzFactor: 0.5, timeout: 20000 }
+                },
+                streaming: {
+                    bufferingGoal: 30,
+                    rebufferingGoal: 2,
+                    retryParameters: { maxAttempts: 4, baseDelay: 500, backoffFactor: 2, fuzzFactor: 0.5, timeout: 20000 }
+                }
+            });
+
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                request.uris = request.uris.map(absoluteUrl);
+            });
+
+            let receiver;
+            receiver = new shaka.cast.CastReceiver(
+                video,
+                player,
+                (appData) => {
+                    if (receiver) applyMetadata(receiver, appData);
+                },
+                absoluteUrl
+            );
+
+            player.addEventListener('error', (event) => {
+                const detail = event.detail || {};
+                debug('Player Error: ' + (detail.code || detail.message || 'unknown'));
+            });
+            video.addEventListener('playing', () => debug('Playing on Chromecast'));
+            video.addEventListener('pause', () => debug('Paused'));
+            video.addEventListener('waiting', () => debug('Buffering...'));
+            video.addEventListener('ended', () => debug('Ended'));
+            window.addEventListener('unhandledrejection', (event) => {
+                debug('Receiver Error: ' + (event.reason?.message || event.reason || 'unknown'));
+            });
+
+            window.whotubeReceiver = receiver;
+            debug('Receiver initialized. Waiting for sender...');
+        }
+
+        initReceiver().catch((error) => debug('Receiver Init Error: ' + (error?.message || error)));
+    </script>
+</body>
+
+</html>
